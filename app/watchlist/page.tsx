@@ -1,11 +1,12 @@
-import { players } from '@/lib/data'
+import { getLivePlayers } from '@/lib/live-players'
 import { WatchlistView } from '@/components/watchlist-view'
 
 export const metadata = {
   title: 'Watchlist — THE INDICATOR',
 }
 
-export default function WatchlistPage() {
+export default async function WatchlistPage() {
+  const players = await getLivePlayers()
   return (
     <div className="space-y-4">
       <div>
