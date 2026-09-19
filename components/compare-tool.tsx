@@ -70,6 +70,7 @@ export function CompareTool({
             <p className="font-mono text-[10px] text-muted-foreground">
               {p.position} · {p.team}
             </p>
+            {p.availability !== 'Active' && <p className="mt-1 font-mono text-[10px] font-bold text-amber-300">{p.availability}</p>}
             <div className="mt-2 flex justify-center">
               <Sparkline data={p.history} trend={p.trend} width={64} height={22} />
             </div>

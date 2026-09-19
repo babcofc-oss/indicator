@@ -28,6 +28,7 @@ export function PlayerRow({
 
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-foreground">{player.name}</p>
+        {player.availability && player.availability !== 'Active' && <span className="mr-1 inline-block rounded bg-amber-400/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-amber-300">{player.availability}</span>}
         <PositionTag position={player.position} team={player.team} />
       </div>
 
