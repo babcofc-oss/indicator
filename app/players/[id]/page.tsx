@@ -2,13 +2,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { ArrowLeft, GitCompare, Quote } from 'lucide-react'
-import { players, getPlayer } from '@/lib/data'
+import { players } from '@/lib/data'
 import { Panel, PanelHeader, StatTile, MetricScore } from '@/components/panel'
 import { ValueChart } from '@/components/value-chart'
-import { SignalBadge, TrendBadge } from '@/components/badges'
+import { TrendBadge } from '@/components/badges'
 import { WatchButton } from '@/components/watch-button'
 import { fmtValue } from '@/lib/format'
 import { playerPortrait } from '@/lib/player-images'
+import { getLivePlayers } from '@/lib/live-players'
 
 export function generateStaticParams() {
   return players.map((p) => ({ id: p.id }))
@@ -20,7 +21,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>
 }): Promise<Metadata> {
   const { id } = await params
-  const player = getPlayer(id)
+  const player = (await getLivePlayers()).find((p) => p.id === id)
   if (!player) return { title: 'Player — THE INDICATOR' }
   return {
     title: `${player.name} · ${player.position} ${player.team} — THE INDICATOR`,
@@ -30,7 +31,7 @@ export async function generateMetadata({
 
 export default async function PlayerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const player = getPlayer(id)
+  const player = (await getLivePlayers()).find((p) => p.id === id)
   if (!player) notFound()
 
   const isPasser = player.position === 'QB'
@@ -72,6 +73,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
       </Link>
 
       <section className="player-card" aria-label={`${player.name} player card`}>
+        {player.availability !== 'Active' && <div className="bg-amber-300 px-3 py-2 text-center text-sm font-bold text-slate-950">{player.availability} · Sample trend and recommendation withheld</div>}
         <div className="player-card__masthead">
           <span className="player-card__brand">THE INDICATOR <span>◆</span> 2026</span>
           <span className="player-card__edition">PLAYER INTELLIGENCE · NO. {String(players.indexOf(player) + 1).padStart(3, '0')}</span>
@@ -80,7 +82,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
           <span className="player-card__crest" aria-hidden="true">◆</span>
           <div className="player-card__identity">
             <h1>{player.name}</h1>
-            <p className="player-card__eyebrow">{player.position} <span>•</span> {player.team}</p>
+            <p className="player-card__eyebrow">{player.position} <span>•</span> {player.team} {player.availability !== 'Active' && `• ${player.availability}`}</p>
           </div>
           <div className="player-card__score"><span>INDICATOR</span><strong>{player.indicatorScore}</strong><small>/ 100</small></div>
         </div>
@@ -112,6 +114,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
           <div className="player-card__actions"><WatchButton id={player.id} withLabel /><Link href={`/compare?ids=${player.id}`} className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-2.5 py-1.5 text-[13px] font-medium hover:bg-white/15"><GitCompare className="size-4" /> Compare</Link></div>
         </div>
       </section>
+      <p className="text-[11px] text-muted-foreground">Availability from Sleeper player directory{player.availabilityCheckedAt ? `, checked ${player.availabilityCheckedAt}` : ' (check unavailable)'}. Scores, projections and value history remain illustrative.</p>
 
       {/* Value chart */}
       <Panel>
