@@ -36,7 +36,7 @@ export async function getLivePlayers(): Promise<Player[]> {
   return players.map((sample) => {
     const record = snapshot.records[sample.id]
     const availability = record
-      ? (record.injury_status || (record.status !== 'Active' ? record.status : null) || 'Active')
+      ? (record.injury_status || record.status || 'Unverified')
       : 'Unverified'
     if (availability === 'Active') return { ...sample, availability, availabilityCheckedAt: snapshot.checkedAt }
 
