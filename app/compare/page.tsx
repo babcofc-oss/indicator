@@ -1,4 +1,4 @@
-import { players } from '@/lib/data'
+import { getLivePlayers } from '@/lib/live-players'
 import { CompareTool } from '@/components/compare-tool'
 
 export const metadata = {
@@ -11,6 +11,7 @@ export default async function ComparePage({
   searchParams: Promise<{ ids?: string }>
 }) {
   const { ids } = await searchParams
+  const players = await getLivePlayers()
   const initialIds = ids ? ids.split(',').filter(Boolean) : []
 
   return (
