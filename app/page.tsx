@@ -38,10 +38,10 @@ export default async function MarketPage() {
         <div>
           <h1 className="font-mono text-lg font-bold tracking-tight text-foreground">Market</h1>
           <p className="text-[13px] text-muted-foreground">
-            Illustrative value signals, filtered against current roster availability.
+            Demo rankings and projections. Availability is checked against Sleeper's roster.
           </p>
         </div>
-        <span className="hidden shrink-0 text-right text-[11px] text-muted-foreground sm:block">Sample metrics<br />Sleeper availability · daily</span>
+        <span className="hidden shrink-0 text-right text-[11px] text-muted-foreground sm:block">Sample metrics<br />Availability checked: {players[0]?.availabilityCheckedAt || 'unavailable'}</span>
       </div>
       {!available.length && <p className="rounded-lg border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-amber-200">Player availability could not be verified. Recommendations are withheld until the roster check recovers.</p>}
 
@@ -50,7 +50,7 @@ export default async function MarketPage() {
       {/* Market movers */}
       <div className="grid gap-3 sm:grid-cols-2">
         <Panel>
-          <PanelHeader title="Top Risers" icon={ArrowUpRight} accent="text-rising" />
+          <PanelHeader title="Sample Risers" icon={ArrowUpRight} accent="text-rising" />
           <div className="divide-y divide-border/60 p-1.5">
             {marketRisers.map((p) => (
               <PlayerRow key={p.id} player={p} metric="value" />
@@ -58,7 +58,7 @@ export default async function MarketPage() {
           </div>
         </Panel>
         <Panel>
-          <PanelHeader title="Top Fallers" icon={ArrowDownRight} accent="text-falling" />
+          <PanelHeader title="Sample Fallers" icon={ArrowDownRight} accent="text-falling" />
           <div className="divide-y divide-border/60 p-1.5">
             {marketFallers.map((p) => (
               <PlayerRow key={p.id} player={p} metric="value" />
@@ -70,7 +70,7 @@ export default async function MarketPage() {
       {/* Buy / Sell */}
       <div className="grid gap-3 sm:grid-cols-2">
         <Panel>
-          <PanelHeader title="Buy Signals" icon={ArrowUpRight} accent="text-rising" />
+          <PanelHeader title="Sample Buy Signals" icon={ArrowUpRight} accent="text-rising" />
           <div className="divide-y divide-border/60 p-1.5">
             {buySignals.map((p) => (
               <PlayerRow key={p.id} player={p} metric="ppg" />
@@ -78,7 +78,7 @@ export default async function MarketPage() {
           </div>
         </Panel>
         <Panel>
-          <PanelHeader title="Sell Signals" icon={ArrowDownRight} accent="text-falling" />
+          <PanelHeader title="Sample Sell Signals" icon={ArrowDownRight} accent="text-falling" />
           <div className="divide-y divide-border/60 p-1.5">
             {sellSignals.map((p) => (
               <PlayerRow key={p.id} player={p} metric="ppg" />
