@@ -10,27 +10,27 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import {
-  players,
-  marketRisers,
-  marketFallers,
-  buySignals,
-  sellSignals,
-  breakoutWatch,
-  roleChanges,
-  injuryOpportunities,
-  waiverTargets,
   handcuffs,
-  getPlayer,
 } from '@/lib/data'
+import { getLivePlayers, isAvailable } from '@/lib/live-players'
 import { Panel, PanelHeader } from '@/components/panel'
 import { PlayerRow } from '@/components/player-row'
 import { Ticker } from '@/components/ticker'
 import { TrendBadge } from '@/components/badges'
 import { fmtValue } from '@/lib/format'
 
-const tickerPlayers = [...players].sort((a, b) => Math.abs(b.valueDeltaPct) - Math.abs(a.valueDeltaPct)).slice(0, 10)
-
-export default function MarketPage() {
+export default async function MarketPage() {
+  const players = await getLivePlayers()
+  const available = players.filter(isAvailable)
+  const tickerPlayers = [...available].sort((a, b) => Math.abs(b.valueDeltaPct) - Math.abs(a.valueDeltaPct)).slice(0, 10)
+  const marketRisers = [...available].sort((a, b) => b.valueDeltaPct - a.valueDeltaPct).slice(0, 5)
+  const marketFallers = [...available].sort((a, b) => a.valueDeltaPct - b.valueDeltaPct).slice(0, 5)
+  const buySignals = available.filter((p) => p.signal === 'STRONG BUY' || p.signal === 'BUY').sort((a, b) => b.scoreDelta - a.scoreDelta)
+  const sellSignals = available.filter((p) => p.signal === 'SELL').sort((a, b) => a.scoreDelta - b.scoreDelta)
+  const breakoutWatch = available.filter((p) => p.signal === 'BREAKOUT ALERT').sort((a, b) => b.scoreDelta - a.scoreDelta)
+  const roleChanges = available.filter((p) => p.signal === 'ROLE CHANGE').sort((a, b) => b.scoreDelta - a.scoreDelta)
+  const injuryOpportunities = available.filter((p) => p.signal === 'INJURY OPPORTUNITY').sort((a, b) => b.scoreDelta - a.scoreDelta)
+  const waiverTargets = available.filter((p) => p.fantasyValue < 40 && p.trend === 'Rising').sort((a, b) => b.valueDeltaPct - a.valueDeltaPct).slice(0, 6)
   return (
     <div className="space-y-4">
       {/* Intro */}
@@ -38,15 +38,12 @@ export default function MarketPage() {
         <div>
           <h1 className="font-mono text-lg font-bold tracking-tight text-foreground">Market</h1>
           <p className="text-[13px] text-muted-foreground">
-            Where player value is moving — and why, before the box scores catch up.
+            Illustrative value signals, filtered against current roster availability.
           </p>
         </div>
-        <span className="hidden shrink-0 text-right text-[11px] text-muted-foreground sm:block">
-          Illustrative 2026 season
-          <br />
-          Sample Week 10 snapshot
-        </span>
+        <span className="hidden shrink-0 text-right text-[11px] text-muted-foreground sm:block">Sample metrics<br />Sleeper availability · daily</span>
       </div>
+      {!available.length && <p className="rounded-lg border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-amber-200">Player availability could not be verified. Recommendations are withheld until the roster check recovers.</p>}
 
       <Ticker players={tickerPlayers} />
 
@@ -146,9 +143,8 @@ export default function MarketPage() {
           }
         />
         <div className="divide-y divide-border/60 p-1.5">
-          {handcuffs.slice(0, 4).map((hc) => {
-            const p = getPlayer(hc.backupId)
-            if (!p) return null
+          {handcuffs.filter((hc) => available.some((p) => p.id === hc.backupId)).slice(0, 4).map((hc) => {
+            const p = available.find((player) => player.id === hc.backupId)!
             const upside = ((hc.inheritValue - hc.standaloneValue) / hc.standaloneValue) * 100
             return (
               <Link
