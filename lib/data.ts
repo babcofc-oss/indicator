@@ -26,6 +26,8 @@ export interface Player {
   name: string
   team: string
   position: Position
+  availability?: string
+  availabilityCheckedAt?: string
   indicatorScore: number // 0-100
   scoreDelta: number // change in indicator score over trailing window
   trend: Trend

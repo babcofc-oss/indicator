@@ -25,7 +25,11 @@ const sleeperIds: Record<string, string> = {
   'kendre-miller': '9757',
 }
 
+export function sleeperPlayerId(id: string): string | undefined {
+  return sleeperIds[id]
+}
+
 export function playerPortrait(id: string): string | undefined {
-  const sleeperId = sleeperIds[id]
+  const sleeperId = sleeperPlayerId(id)
   return sleeperId && `https://sleepercdn.com/content/nfl/players/${sleeperId}.jpg`
 }
