@@ -3,10 +3,9 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { ArrowLeft, GitCompare, Quote } from 'lucide-react'
 import { players, getPlayer } from '@/lib/data'
-import { IndicatorScore } from '@/components/indicator-score'
 import { Panel, PanelHeader, StatTile, MetricScore } from '@/components/panel'
 import { ValueChart } from '@/components/value-chart'
-import { SignalBadge, TrendBadge, PositionTag } from '@/components/badges'
+import { SignalBadge, TrendBadge } from '@/components/badges'
 import { WatchButton } from '@/components/watch-button'
 import { fmtValue } from '@/lib/format'
 
@@ -62,48 +61,29 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
         <ArrowLeft className="size-4" /> Market
       </Link>
 
-      {/* Hero */}
-      <Panel className="relative overflow-hidden border border-primary/35 bg-gradient-to-br from-primary/15 via-surface to-background p-4 shadow-[inset_0_0_0_3px_var(--background),inset_0_0_0_4px_var(--border)]">
-        <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-primary">The Indicator · Player card</p>
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <SignalBadge signal={player.signal} />
-              <PositionTag position={player.position} team={player.team} />
-            </div>
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">{player.name}</h1>
-            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <div>
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Value</p>
-                <p className="tnum font-mono text-lg font-semibold text-foreground">
-                  {fmtValue(player.fantasyValue)}
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Pred. PPG</p>
-                <p className="tnum font-mono text-lg font-semibold text-foreground">
-                  {player.predictedPPG.toFixed(1)}
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Trend</p>
-                <TrendBadge trend={player.trend} deltaPct={player.valueDeltaPct} className="mt-0.5" />
-              </div>
-            </div>
+      <section className="player-card" aria-label={`${player.name} player card`}>
+        <div className="player-card__masthead">
+          <span className="player-card__brand">THE INDICATOR <span>◆</span> 2026</span>
+          <span className="player-card__edition">PLAYER INTELLIGENCE · NO. {String(players.indexOf(player) + 1).padStart(3, '0')}</span>
+        </div>
+        <div className="player-card__nameplate">
+          <div>
+            <p className="player-card__eyebrow">{player.position} <span>•</span> {player.team}</p>
+            <h1>{player.name}</h1>
           </div>
-          <IndicatorScore score={player.indicatorScore} size={84} strokeWidth={7} />
+          <div className="player-card__score"><span>INDICATOR</span><strong>{player.indicatorScore}</strong><small>/ 100</small></div>
         </div>
-
-        <div className="mt-4 flex items-center gap-2">
-          <WatchButton id={player.id} withLabel />
-          <Link
-            href={`/compare?ids=${player.id}`}
-            className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-          >
-            <GitCompare className="size-4" /> Compare
-          </Link>
+        <div className="player-card__field">
+          <div className="player-card__monogram" aria-hidden="true">{player.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}</div>
+          <div className="player-card__field-copy"><SignalBadge signal={player.signal} /><p>UNDERLYING VALUE</p><strong>{fmtValue(player.fantasyValue)}</strong><TrendBadge trend={player.trend} deltaPct={player.valueDeltaPct} /></div>
+          <div className="player-card__ribbon">{player.trend.toUpperCase()} <span>◆</span> {player.position}</div>
         </div>
-      </Panel>
+        <div className="player-card__footer">
+          <div><span>PROJECTED PPG</span><strong>{player.predictedPPG.toFixed(1)}</strong></div>
+          <div><span>VALUE TREND</span><strong>{player.valueDeltaPct > 0 ? '+' : ''}{player.valueDeltaPct.toFixed(1)}%</strong></div>
+          <div className="player-card__actions"><WatchButton id={player.id} withLabel /><Link href={`/compare?ids=${player.id}`} className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-2.5 py-1.5 text-[13px] font-medium hover:bg-white/15"><GitCompare className="size-4" /> Compare</Link></div>
+        </div>
+      </section>
 
       {/* Value chart */}
       <Panel>
