@@ -34,6 +34,15 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
   if (!player) notFound()
 
   const isPasser = player.position === 'QB'
+  const chartValues = player.history.map((point) => point.value)
+  const chartMin = Math.min(...chartValues)
+  const chartRange = Math.max(...chartValues) - chartMin || 1
+  const cardChartPoints = player.history.map((point, index) => {
+    const x = 40 + (index * 920) / Math.max(player.history.length - 1, 1)
+    const y = 350 - ((point.value - chartMin) / chartRange) * 245
+    return `${x},${y}`
+  }).join(' ')
+  const lastChartPoint = cardChartPoints.split(' ').at(-1)?.split(',').map(Number) ?? [960, 350]
 
   const usageTiles = isPasser
     ? [
@@ -76,6 +85,18 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
           <div className="player-card__score"><span>INDICATOR</span><strong>{player.indicatorScore}</strong><small>/ 100</small></div>
         </div>
         <div className="player-card__field">
+          <svg className="player-card__chart" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="card-chart-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ffe28c" stopOpacity=".35" />
+                <stop offset="100%" stopColor="#ffe28c" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path className="player-card__chart-grid" d="M0 100H1000 M0 200H1000 M0 300H1000 M0 400H1000 M200 0V500 M400 0V500 M600 0V500 M800 0V500" />
+            <polygon points={`40,500 ${cardChartPoints} 960,500`} fill="url(#card-chart-fill)" />
+            <polyline className="player-card__chart-line" points={cardChartPoints} />
+            <circle cx={lastChartPoint[0]} cy={lastChartPoint[1]} r="9" fill="#ffe28c" />
+          </svg>
           {playerPortrait(player.id) ? (
             <img className="player-card__portrait" src={playerPortrait(player.id)} alt={`${player.name} portrait`} />
           ) : (
