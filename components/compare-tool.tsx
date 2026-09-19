@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Plus, Star, X } from 'lucide-react'
+import { Plus, Search, Star, X } from 'lucide-react'
 import type { Player } from '@/lib/data'
 import { IndicatorScore } from '@/components/indicator-score'
 import { TrendBadge } from '@/components/badges'
@@ -27,13 +27,17 @@ export function CompareTool({
   allPlayers: Player[]
   initialIds: string[]
 }) {
-  const [selected, setSelected] = useState<string[]>(
-    initialIds.length ? initialIds.slice(0, 4) : ['caleb-douglas', 'nico-collins'],
-  )
+  const [selected, setSelected] = useState<string[]>(() => {
+    const valid = [...new Set(initialIds)].filter((id) => allPlayers.some((p) => p.id === id))
+    return valid.length ? valid.slice(0, 4) : ['caleb-douglas', 'nico-collins']
+  })
   const [adding, setAdding] = useState(false)
+  const [query, setQuery] = useState('')
 
   const chosen = selected.map((id) => allPlayers.find((p) => p.id === id)).filter(Boolean) as Player[]
-  const remaining = allPlayers.filter((p) => !selected.includes(p.id))
+  const remaining = allPlayers.filter((p) =>
+    !selected.includes(p.id) && `${p.name} ${p.team} ${p.position}`.toLowerCase().includes(query.trim().toLowerCase()),
+  )
 
   function bestFor(key: keyof Player): number {
     return Math.max(...chosen.map((p) => Number(p[key])))
@@ -42,8 +46,9 @@ export function CompareTool({
   return (
     <div className="space-y-3">
       {/* Column headers */}
+      <div className="overflow-x-auto pb-1">
       <div
-        className="grid gap-2"
+        className="grid min-w-[560px] gap-2 sm:min-w-0"
         style={{ gridTemplateColumns: `repeat(${chosen.length + (chosen.length < 4 ? 1 : 0)}, minmax(0, 1fr))` }}
       >
         {chosen.map((p) => (
@@ -82,9 +87,16 @@ export function CompareTool({
           </button>
         ) : null}
       </div>
+      </div>
 
       {adding && chosen.length < 4 ? (
         <div className="max-h-64 overflow-y-auto rounded-xl border border-border bg-card p-1.5">
+          <div className="sticky top-0 bg-card p-1.5">
+            <label className="relative block">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <input aria-label="Search players to compare" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search players or teams" className="w-full rounded-md border border-border bg-background py-2 pl-8 pr-2 text-sm outline-none focus-visible:border-primary" />
+            </label>
+          </div>
           {remaining.map((p) => (
             <button
               key={p.id}
@@ -101,19 +113,20 @@ export function CompareTool({
               </span>
             </button>
           ))}
+          {!remaining.length && <p className="p-4 text-center text-sm text-muted-foreground">No matching players.</p>}
         </div>
       ) : null}
 
       {/* Comparison matrix */}
       {chosen.length ? (
-        <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <div className="overflow-x-auto rounded-xl border border-border bg-card">
           {ROWS.map((row, i) => {
             const best = row.kind === 'trend' ? null : bestFor(row.key)
             return (
               <div
                 key={row.key as string}
                 className={cn(
-                  'grid items-center gap-2 px-3 py-2.5',
+                  'grid min-w-[560px] items-center gap-2 px-3 py-2.5 sm:min-w-0',
                   i % 2 ? 'bg-surface/40' : '',
                 )}
                 style={{ gridTemplateColumns: `110px repeat(${chosen.length}, minmax(0, 1fr))` }}
