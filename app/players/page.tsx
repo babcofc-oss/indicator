@@ -1,11 +1,12 @@
-import { players } from '@/lib/data'
+import { getLivePlayers } from '@/lib/live-players'
 import { PlayersExplorer } from '@/components/players-explorer'
 
 export const metadata = {
   title: 'Players — THE INDICATOR',
 }
 
-export default function PlayersPage() {
+export default async function PlayersPage() {
+  const players = await getLivePlayers()
   return (
     <div className="space-y-4">
       <div>
