@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, Shield } from 'lucide-react'
-import { handcuffs, getPlayer } from '@/lib/data'
+import { handcuffs } from '@/lib/data'
+import { getLivePlayers, isAvailable } from '@/lib/live-players'
 import { Panel } from '@/components/panel'
 import { IndicatorScore } from '@/components/indicator-score'
 import { PositionTag, TrendBadge } from '@/components/badges'
@@ -13,7 +14,9 @@ export const metadata = {
 
 const ranked = [...handcuffs].sort((a, b) => b.inheritValue - a.inheritValue)
 
-export default function HandcuffsPage() {
+export default async function HandcuffsPage() {
+  const players = await getLivePlayers()
+  const eligible = ranked.filter((hc) => players.some((p) => p.id === hc.backupId && isAvailable(p)))
   return (
     <div className="space-y-4">
       <div>
@@ -24,9 +27,8 @@ export default function HandcuffsPage() {
       </div>
 
       <div className="space-y-3">
-        {ranked.map((hc, idx) => {
-          const p = getPlayer(hc.backupId)
-          if (!p) return null
+        {eligible.map((hc, idx) => {
+          const p = players.find((player) => player.id === hc.backupId)!
           const upside = ((hc.inheritValue - hc.standaloneValue) / hc.standaloneValue) * 100
           return (
             <Panel key={hc.id} className="p-3.5">
