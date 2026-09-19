@@ -8,6 +8,7 @@ import { ValueChart } from '@/components/value-chart'
 import { SignalBadge, TrendBadge } from '@/components/badges'
 import { WatchButton } from '@/components/watch-button'
 import { fmtValue } from '@/lib/format'
+import { playerPortrait } from '@/lib/player-images'
 
 export function generateStaticParams() {
   return players.map((p) => ({ id: p.id }))
@@ -67,18 +68,24 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
           <span className="player-card__edition">PLAYER INTELLIGENCE · NO. {String(players.indexOf(player) + 1).padStart(3, '0')}</span>
         </div>
         <div className="player-card__nameplate">
-          <div>
-            <p className="player-card__eyebrow">{player.position} <span>•</span> {player.team}</p>
+          <span className="player-card__crest" aria-hidden="true">◆</span>
+          <div className="player-card__identity">
             <h1>{player.name}</h1>
+            <p className="player-card__eyebrow">{player.position} <span>•</span> {player.team}</p>
           </div>
           <div className="player-card__score"><span>INDICATOR</span><strong>{player.indicatorScore}</strong><small>/ 100</small></div>
         </div>
         <div className="player-card__field">
-          <div className="player-card__monogram" aria-hidden="true">{player.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}</div>
-          <div className="player-card__field-copy"><SignalBadge signal={player.signal} /><p>UNDERLYING VALUE</p><strong>{fmtValue(player.fantasyValue)}</strong><TrendBadge trend={player.trend} deltaPct={player.valueDeltaPct} /></div>
-          <div className="player-card__ribbon">{player.trend.toUpperCase()} <span>◆</span> {player.position}</div>
+          {playerPortrait(player.id) ? (
+            <img className="player-card__portrait" src={playerPortrait(player.id)} alt={`${player.name} portrait`} />
+          ) : (
+            <div className="player-card__monogram" aria-hidden="true">{player.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}</div>
+          )}
+          <div className="player-card__photo-label">{player.team} <span>◆</span> {player.position}</div>
+          <div className="player-card__ribbon"><span>{player.signal}</span><strong>{player.trend.toUpperCase()}</strong></div>
         </div>
         <div className="player-card__footer">
+          <div><span>UNDERLYING VALUE</span><strong>{fmtValue(player.fantasyValue)}</strong></div>
           <div><span>PROJECTED PPG</span><strong>{player.predictedPPG.toFixed(1)}</strong></div>
           <div><span>VALUE TREND</span><strong>{player.valueDeltaPct > 0 ? '+' : ''}{player.valueDeltaPct.toFixed(1)}%</strong></div>
           <div className="player-card__actions"><WatchButton id={player.id} withLabel /><Link href={`/compare?ids=${player.id}`} className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-2.5 py-1.5 text-[13px] font-medium hover:bg-white/15"><GitCompare className="size-4" /> Compare</Link></div>
