@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Bookmark } from 'lucide-react'
+import { Bookmark, GitCompare } from 'lucide-react'
 import type { Player } from '@/lib/data'
 import { useWatchlist } from '@/components/watchlist-provider'
 import { Panel } from '@/components/panel'
@@ -47,6 +47,11 @@ export function WatchlistView({ allPlayers }: { allPlayers: Player[] }) {
 
   return (
     <div className="space-y-3">
+      {sorted.length > 1 && (
+        <Link href={`/compare?ids=${sorted.slice(0, 4).map((p) => p.id).join(',')}`} className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground hover:bg-secondary">
+          <GitCompare className="size-4" /> Compare watched players
+        </Link>
+      )}
       <div className="grid grid-cols-3 gap-2.5">
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <p className="tnum font-mono text-xl font-bold text-foreground">{avg}</p>
