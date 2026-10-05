@@ -578,3 +578,69 @@ button:focus-visible,a:focus-visible,input:focus-visible {
   .market-player strong { font-size: 14px; }
   .news p,.news a { font-size: 13px; }
 }
+
+/* Preserve the approved landscape terminal on phones. */
+.reference-home { padding: 12px; overflow-x: clip; }
+.reference-home .reference-frame { position: relative; width: 100%; max-width: 1320px; margin: 0 auto; }
+.reference-home .reference-stage { width: 100%; min-width: 1120px; transform-origin: top left; border: 1px solid #344044; border-radius: 42px; overflow: hidden; background: #080d10; }
+.reference-home .shell-header { position: static; }
+.reference-home .shell-header-inner { flex-wrap: nowrap; gap: 12px; padding: 10px 14px; }
+.reference-home .shell-brand { flex-shrink: 0; }
+.reference-home .shell-brand > span:last-child > span:first-child { font-size: 23px; }
+.reference-home .shell-brand > span:last-child > span:last-child { font-size: 7px; }
+.reference-home .shell-nav { display: flex; }
+.reference-home .shell-nav a { font-size: 11px; padding: 10px 7px; }
+.reference-home #terminal-search { flex: 0 0 215px; }
+.reference-home #terminal-search input { font-size: 11px; }
+.reference-home .shell-main { padding: 7px 12px 12px; }
+.reference-home .terminal-status { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 6px; }
+.reference-home .terminal-grid { display: grid; grid-template-columns: minmax(0,.84fr) minmax(0,1.16fr) minmax(0,1fr); gap: 10px; }
+.reference-home .feature-column { order: initial; width: auto; padding: 0; }
+.reference-home .market-list { order: initial; width: auto; max-height: 650px; overflow-y: auto; }
+.reference-home .intelligence-column { order: initial; width: auto; grid-column: auto; }
+.reference-home .terminal-card { border-width: 3px; padding: 5px; border-radius: 4px; background: linear-gradient(130deg,#e54a29,#a52118 40%,#ef5932 70%,#b9271f); }
+.reference-home .card-name { padding: 6px 4px; gap: 6px; border-bottom-width: 2px; border-radius: 9px 9px 0 0; }
+.reference-home .card-name h2 { font-size: 26px; letter-spacing: -.035em; font-stretch: condensed; }
+.reference-home .card-name p { font-size: 11px; }
+.reference-home .card-crest { width: 48px; height: 48px; display: grid; place-items: center; padding: 0; font-size: 12px; }
+.reference-home .card-art { height: 385px; border-width: 2px; border-radius: 9px 9px 2px 2px; }
+.reference-home .card-art img { inset: 0; height: 100%; object-position: center top; }
+.reference-home .card-art .game-photo { object-position: center 20%; }
+.reference-home .card-art::after { content: ''; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 35px #05181e66; background: repeating-linear-gradient(0deg,transparent 0 3px,#00000006 3px 4px); }
+.reference-home .chart-pending { font-size: 9px; background: #07161ccb; padding: 3px 5px; }
+.reference-home .card-ribbon { z-index: 3; width: 56%; padding: 0; clip-path: none; transform: rotate(-30deg); transform-origin: right center; right: -20px; bottom: 58px; border: 2px solid #e3d299; background: #224e6c; box-shadow: 0 2px 5px #0008; }
+.reference-home .card-ribbon span { padding: 6px 13px; font-size: 15px; line-height: 1; border-top: 1px solid #e5d49b; text-align: center; }
+.reference-home .card-ribbon span:first-child { border-top: 0; }
+.reference-home .card-brand { font-size: 16px; padding: 3px 0 0; }
+.reference-home .feature-controls { top: 240px; inset-inline: -12px; }
+.reference-home .feature-controls button { padding: 6px 8px; font-size: 26px; }
+.reference-home .market-player strong { font-size: 12px; }
+.reference-home .market-player { min-height: 31px; padding-block: 4px; }
+.reference-home .market-list .empty-note { font-size: 10px; padding-block: 5px; }
+.reference-home .intelligence h3 { font-size: 21px; }
+.reference-home .score-box strong { font-size: 23px; }
+.reference-home .intelligence dl.intelligence-primary { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; }
+.reference-home .intelligence dl.intelligence-primary > div { display: block; }
+.reference-home .intelligence-primary dt { font-size: 8px; }
+.reference-home .intelligence-primary dd { font-size: 9px; text-align: left; margin-top: 5px; }
+.reference-home .intelligence-detail-grid dt { font-size: 10px; }
+.reference-home .intelligence-detail-grid dd { text-align: left; }
+.reference-home .value-empty { height: 140px; }
+.reference-home .news p,.reference-home .news a,.reference-home .news small { font-size: 11px; padding: 5px 10px; }
+.reference-home .photo-credit { font-size: 9px; color: #84969e; margin-top: 5px; text-align: center; }
+.reference-home .photo-credit a { text-decoration: underline; }
+.reference-home .home-bottom-nav { display: none; }
+@media (max-width: 1135px) { .reference-home .reference-stage { width: 1120px; } }
+@media (max-width: 640px) { .reference-home { padding: 10px; } }
+.reference-home .card-art { height: auto; aspect-ratio: .92; }
+.reference-home .shell-brand > span:last-child > span:first-child { font-style: italic; font-weight: 900; }
+.reference-home .card-ribbon { bottom: 72px; }
+@font-face { font-family: 'Indicator Card'; src: url('/anton-latin.woff2') format('woff2'); font-style: normal; font-weight: 400; font-display: swap; }
+.reference-home .card-name h2 { font-family: 'Indicator Card',Impact,sans-serif; font-weight: 400; font-size: 31px; letter-spacing: .01em; white-space: nowrap; }
+.reference-home .card-name > div { flex: 1; text-align: center; min-width: 0; }
+.reference-home .card-name { min-height: 66px; }
+.reference-home .shell-brand > span:last-child > span:first-child { font-family: 'Indicator Card',Impact,sans-serif; font-size: 25px; font-weight: 400; }
+.reference-home .card-art .game-photo { object-position: center top; }
+.reference-home .intelligence .intelligence-detail-grid dl > div { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 4px; padding: 5px 0; }
+.reference-home .intelligence-detail-grid dd { margin: 0; font-size: 9px; }
+.reference-home .intelligence-detail-grid dt { font-size: 9px; }
