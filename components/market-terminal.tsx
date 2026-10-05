@@ -1,11 +1,26 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
+import type { ScheduleSnapshot } from '@/lib/live-schedule'
 import type { Player } from '@/lib/data'
 import { playerPortrait } from '@/lib/player-images'
 
-export function MarketTerminal({ players }: { players: Player[] }) {
+type RosterPlayer = Pick<Player, 'id' | 'name' | 'team' | 'position' | 'availability' | 'availabilityCheckedAt'>
+
+function TeamMark({ team, className = '' }: { team: string; className?: string }) {
+  const [failed, setFailed] = useState(false)
+  const imageRef = useRef<HTMLImageElement>(null)
+  useEffect(() => {
+    const image = imageRef.current
+    if (image?.complete && image.naturalWidth === 0) setFailed(true)
+  }, [])
+  const url = team === 'LAC' ? '/lac-logo.png' : `https://sleepercdn.com/images/team_logos/nfl/${team.toLowerCase()}.png`
+  return <span className={className} aria-label={`${team} team`}>{failed ? team : <img ref={imageRef} src={url} alt="" onError={() => setFailed(true)} />}</span>
+}
+
+export function MarketTerminal({ players, schedule = { byTeam: {}, checkedAt: '' } }: { players: RosterPlayer[]; schedule?: ScheduleSnapshot }) {
+  const photoRef = useRef<HTMLImageElement>(null)
   const [index, setIndex] = useState(0)
   const [position, setPosition] = useState('ALL')
   const [search, setSearch] = useState('')
@@ -14,8 +29,13 @@ export function MarketTerminal({ players }: { players: Player[] }) {
   useEffect(() => { setSearchHost(document.getElementById('terminal-search')) }, [])
   const searchField = <input aria-label="Search players" placeholder="Search players, teams…" value={search} onChange={e => setSearch(e.target.value)} />
   const player = players[index]
+  const nextGames = player ? schedule.byTeam[player.team] ?? [] : []
   const actionPhoto = player?.id === 'justin-herbert'
-  const photo = actionPhoto ? '/justin-herbert-2021.jpg' : player && playerPortrait(player.id)
+  const photo = actionPhoto ? '/justin-herbert-cutout.png' : player && playerPortrait(player.id)
+  useEffect(() => {
+    const image = photoRef.current
+    if (player && image?.complete && image.naturalWidth === 0) setFailedPhotos(previous => previous.includes(player.id) ? previous : [...previous, player.id])
+  }, [photo, player?.id])
   const filtered = players.filter(p => (position === 'ALL' || p.position === position) && `${p.name} ${p.team}`.toLowerCase().includes(search.toLowerCase()))
   const cycle = (step: number) => setIndex(current => players.length ? (current + step + players.length) % players.length : 0)
   return <div className="terminal">
@@ -33,21 +53,21 @@ export function MarketTerminal({ players }: { players: Player[] }) {
       <div className="feature-column">
         <div className="feature-controls"><span>FEATURED PLAYER</span><div><button aria-label="Previous featured player" disabled={!players.length} onClick={() => cycle(-1)}>‹</button><button aria-label="Next featured player" disabled={!players.length} onClick={() => cycle(1)}>›</button></div></div>
         {player ? <Link className="terminal-card" href={`/players/${player.id}`} aria-label={`Open ${player.name} profile`}>
-          <div className="card-name"><span className="card-crest">{player.team}</span><div><h2>{player.name}</h2><p>{player.position} · {player.team}</p></div><span className="card-edition">NFL<br/>PLAYER</span></div>
+          <div className="card-name"><TeamMark key={player.team} team={player.team} className="card-crest" /><div><h2 style={{fontSize: player.name.length > 16 ? 27 : 34}}>{player.name}</h2><p>{player.position} · {player.team}</p></div><span className="card-edition">NFL<br/>PLAYER</span></div>
           <div className="card-art"><div className="card-chart-grid" /><span className="chart-pending">UNDERLYING VALUE · UNKNOWN</span>
-            {photo && !failedPhotos.includes(player.id) ? <img className={actionPhoto ? "game-photo" : undefined} src={photo} alt={`${player.name}${actionPhoto ? " in uniform, September 2021" : " portrait"}`} onError={() => setFailedPhotos(previous => [...previous,player.id])} /> : <div className="portrait-fallback">{player.name.split(' ').map(n=>n[0]).join('')}</div>}
+            {photo && !failedPhotos.includes(player.id) ? <img ref={photoRef} className={actionPhoto ? "game-photo" : undefined} src={photo} alt={`${player.name}${actionPhoto ? " in uniform, September 2021" : " portrait"}`} onError={() => setFailedPhotos(previous => [...previous,player.id])} /> : <div className="portrait-fallback">{player.name.split(' ').map(n=>n[0]).join('')}</div>}
             <span className="card-position">{player.position}<small>{player.team}</small></span><div className="card-ribbon"><span>UNDERLYING VALUE</span><span>OPPORTUNITY</span><span>UNRATED</span></div>
           </div><div className="card-brand">★ ★ ★ &nbsp; THE INDICATOR &nbsp; ★ ★ ★</div>
         </Link> : <div className="terminal-panel empty-note">Player directory unavailable. No roster claims published.</div>}
-        {actionPhoto && <p className="photo-credit">2021 photo: <a href="https://commons.wikimedia.org/wiki/File:Justin_Herbert_2021.jpg">All-Pro Reels</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · display crop</p>}
-        <section className="terminal-panel news"><h2>RECENT NEWS & NOTES</h2><p>No sourced news available yet.</p><p className="muted">Roster identity and availability are observed data. Projections and Indicator analysis remain unpublished.</p>{player?.availabilityCheckedAt && <small>Sleeper roster checked: {player.availabilityCheckedAt}</small>}</section>
+        {actionPhoto && <p className="photo-credit">2021 photo: <a href="https://commons.wikimedia.org/wiki/File:Justin_Herbert_2021.jpg">All-Pro Reels</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · background removed · display crop</p>}
+        <section className="terminal-panel news"><h2>RECENT NEWS & NOTES</h2><p>No sourced news available yet.</p><p className="muted">Observed roster data · Analysis awaiting verified usage.</p>{player?.availabilityCheckedAt && <small>Sleeper roster checked: {player.availabilityCheckedAt}</small>}</section>
       </div>
-      <div className="intelligence-column"><section className="terminal-panel intelligence"><h2>PLAYER INTELLIGENCE</h2><h3>{player?.name || 'UNKNOWN'}</h3><p className="muted">{player?.position} · {player?.team}</p>
+      <div className="intelligence-column"><section className="terminal-panel intelligence"><h2>PLAYER INTELLIGENCE</h2><div className="intelligence-identity"><h3>{player?.name || 'UNKNOWN'}</h3>{player && <TeamMark key={player.team} team={player.team} className="intelligence-team" />}</div><p className="muted">{player?.position} · {player?.team}</p>
         <div className="score-box"><div><small>INDICATOR SCORE</small><strong>UNKNOWN</strong></div><div><small>TREND</small><b>UNRATED</b></div></div>
         <div className="intelligence-tabs"><span className="overview-active">Overview</span><span>OBSERVED DATA</span></div>
         <dl className="intelligence-primary">{['Projected PPG','Opportunity','Target share','Carry share'].map(label=><div key={label}><dt>{label}</dt><dd>UNKNOWN</dd></div>)}</dl>
         <div className="value-empty"><span>UNDERLYING VALUE HISTORY</span><p>Awaiting verified observations</p><div className="history-axis"><span>WEEKLY OPPORTUNITY</span><span>NO DATA</span></div></div>
-        <div className="intelligence-detail-grid"><section><h4>NEXT GAMES</h4><dl>{['Matchup','Upcoming schedule','Injury environment'].map(label=><div key={label}><dt>{label}</dt><dd>UNKNOWN</dd></div>)}</dl></section><section><h4>SEASON OUTLOOK</h4><dl>{['Position rank','Score movement','Usage / snaps','Rest-of-season'].map(label=><div key={label}><dt>{label}</dt><dd>UNKNOWN</dd></div>)}</dl></section></div>
+        <div className="intelligence-detail-grid"><section><h4>NEXT {nextGames.length || ''} GAMES</h4>{nextGames.length ? <><table className="schedule-table"><thead><tr><th>DATE</th><th>OPP</th></tr></thead><tbody>{nextGames.map(game => <tr key={game.id}><td>{game.dateLabel}</td><td><a href={game.sourceUrl} target="_blank" rel="noreferrer">{game.home ? 'vs' : '@'} {game.opponent}</a></td></tr>)}</tbody></table><small className="schedule-source">ESPN · Observed schedule<br/>Checked {schedule.checkedAt}</small></> : <p className="schedule-source">UNKNOWN · No verified upcoming games.</p>}</section><section><h4>SEASON OUTLOOK</h4><dl>{['Position rank','Score movement','Usage / snaps','Rest-of-season'].map(label=><div key={label}><dt>{label}</dt><dd>UNKNOWN</dd></div>)}</dl></section></div>
         <div className="availability-line"><span>ROSTER AVAILABILITY</span><strong>{player?.availability || 'UNKNOWN'}</strong></div>
         <p className="empty-note">Signals withheld until role changes and availability are verified.</p>
       </section><section className="terminal-panel news"><h2>LATEST SIGNALS</h2><p>Signals withheld — insufficient verified evidence.</p><Link href="/signals">Open signal feed</Link></section></div>
