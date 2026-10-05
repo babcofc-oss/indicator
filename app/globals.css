@@ -463,3 +463,11 @@ button:focus-visible,a:focus-visible,input:focus-visible {
 
 }
 
+/* Keep supporting panels within the card composition on desktop. */
+@media (min-width: 1051px) {
+  .market-list { max-height: 800px; overflow-y: auto; }
+  .intelligence dl { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  .intelligence dl > div { flex-direction: column; gap: 5px; padding: 9px 0; }
+  .intelligence dd { text-align: left; }
+}
+.card-art img { mix-blend-mode: normal; }
