@@ -26,7 +26,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-dvh">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border/80 bg-background/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="flex size-7 items-center justify-center rounded-md bg-primary/15 ring-1 ring-primary/30">
               <Activity className="size-4 text-primary" strokeWidth={2.5} />
@@ -65,17 +65,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <span className="flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-[10px] font-medium tracking-wide text-muted-foreground">
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-            DEMO DATA
+            {pathname === '/' ? 'PUBLIC PREVIEW' : 'DEMO ANALYTICS'}
           </span>
         </div>
       </header>
 
       {/* Main */}
-      <main className="mx-auto max-w-5xl px-4 pb-28 pt-4 md:pb-12">{children}</main>
+      <main className="mx-auto max-w-[1440px] px-4 pb-28 pt-4 md:pb-12">{pathname !== '/' && <div role="note" className="mb-4 border border-amber-400/50 bg-amber-400/10 p-4 text-sm text-amber-200"><strong>DEMO ANALYTICS —</strong> Scores, rankings, projections, charts, depth charts and signals on this screen are illustrative. They are not verified and must not be used for roster decisions.</div>}{children}</main>
 
       {/* Mobile bottom nav */}
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/90 backdrop-blur-md md:hidden">
-        <div className="mx-auto grid max-w-5xl grid-cols-6">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-6">
           {NAV.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href)
             return (
