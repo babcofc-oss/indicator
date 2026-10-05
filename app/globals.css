@@ -153,3 +153,313 @@
 .player-card__footer strong { font:800 1.35rem ui-monospace,monospace; }
 .player-card__actions { display:flex; gap:8px; margin-left:auto; align-items:center; }
 @media(max-width:560px) { .player-card { border-width:5px; } .player-card__masthead { font-size:9px; padding:8px; } .player-card__edition { max-width:110px; } .player-card__nameplate { grid-template-columns:34px 1fr 46px; gap:4px; min-height:76px; padding:5px; } .player-card__crest { width:30px; height:30px; border-width:2px; font-size:17px; } .player-card__nameplate h1 { padding:7px 12px; font-size:clamp(1rem,5vw,1.65rem); } .player-card__eyebrow { padding:3px 12px; font-size:10px; } .player-card__score span,.player-card__score small { font-size:7px; } .player-card__score strong { font-size:1.6rem; } .player-card__field { height:365px; border-width:3px; } .player-card__portrait { width:120%; max-width:none; height:100%; } .player-card__field:before { border-inline-width:8px; } .player-card__photo-label { bottom:8px; left:8px; font-size:10px; } .player-card__ribbon { width:125px; height:125px; padding:0 8px 12px 40px; } .player-card__ribbon span { font-size:9px; } .player-card__ribbon strong { font-size:1rem; } .player-card__footer { padding:12px; gap:12px 18px; } .player-card__actions { width:100%; margin-left:0; } }
+/* Approved terminal composition: market / collectible card / intelligence. */
+.terminal {
+  font-family:Arial, sans-serif}
+.terminal-status {
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  color:#8e9b9d;
+  font:12px/1.5 ui-monospace,monospace;
+  margin:0 0 16px}
+.terminal-grid {
+  display:grid;
+  grid-template-columns:minmax(240px,.85fr) minmax(320px,1.1fr) minmax(300px,1fr);
+  gap:16px;
+  align-items:start}
+.terminal-panel {
+  background:linear-gradient(130deg,#111a1d,#0a1013);
+  border:1px solid #334043;
+  box-shadow:inset 0 1px #ffffff08;
+  border-radius:4px}
+.terminal-panel h1,.terminal-panel h2 {
+  font:700 14px/1.4 ui-monospace,monospace;
+  letter-spacing:.025em;
+  padding:13px 14px;
+  border-bottom:1px solid #29373a}
+.terminal-panel h1 span {
+  float:right;
+  color:#718488;
+  font-size:10px;
+  margin-top:3px}
+.market-list input {
+  width:calc(100% - 24px);
+  margin:12px;
+  background:#1b262a;
+  border:1px solid #3c4c50;
+  border-radius:3px;
+  padding:9px;
+  font-size:14px}
+.position-tabs {
+  display:flex;
+  gap:5px;
+  padding:0 12px 12px}
+.position-tabs button {
+  flex:1;
+  font:700 12px ui-monospace,monospace;
+  padding:7px 3px;
+  background:#263136;
+  border-radius:3px}
+.position-tabs button[aria-pressed=true] {
+  background:#ecd18c;
+  color:#171a1b}
+.terminal-panel h2.up {
+  color:#54da95}
+.terminal-panel h2.down {
+  color:#f07171}
+.empty-note {
+  font-size:13px;
+  color:#8fa1a7;
+  line-height:1.6;
+  padding:12px 14px}
+.market-head {
+  display:flex;
+  justify-content:space-between;
+  padding:10px 14px;
+  color:#7f9197;
+  font:11px ui-monospace,monospace;
+  border-block:1px solid #29373a}
+.market-player {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  padding:10px 14px;
+  text-align:left;
+  border-bottom:1px solid #ffffff08}
+.market-player:hover,.market-player[aria-pressed=true] {
+  background:#18333d}
+.market-player strong {
+  font-size:14px;
+  font-weight:500}
+.market-player small {
+  display:block;
+  font-size:12px;
+  color:#8da1aa;
+  margin-top:3px}
+.unknown {
+  color:#899da6}
+.feature-controls {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  color:#a5b5bb;
+  font:12px ui-monospace,monospace}
+.feature-controls button {
+  font-size:24px;
+  line-height:1;
+  padding:2px 12px;
+  background:#17242b;
+  border:1px solid #354854;
+  margin-left:6px;
+  border-radius:3px}
+.terminal-card {
+  display:block;
+  border:6px solid #d1b97e;
+  border-radius:5px;
+  background:#213f65;
+  box-shadow:0 0 0 2px #546e82,0 12px 40px #0008;
+  overflow:hidden}
+.card-name {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:12px 8px;
+  background:#173858;
+  border-bottom:5px solid #d1b97e}
+.card-name h2 {
+  font-weight:900;
+  font-size:clamp(18px,1.8vw,28px);
+  text-transform:uppercase;
+  line-height:1.1}
+.card-name p {
+  color:#eed797;
+  text-align:center;
+  font:700 12px ui-monospace,monospace;
+  margin-top:5px}
+.card-crest {
+  border:2px solid #d1b97e;
+  border-radius:50%;
+  padding:14px 6px;
+  font:700 14px ui-monospace,monospace}
+.card-edition {
+  margin-left:auto;
+  font:700 10px ui-monospace,monospace;
+  color:#b5c8dc}
+.card-art {
+  height:410px;
+  position:relative;
+  overflow:hidden;
+  background:radial-gradient(ellipse at center,#315d79,#091b2d)}
+.card-chart-grid {
+  position:absolute;
+  inset:0;
+  background-image:linear-gradient(#749eaf23 1px,transparent 1px),linear-gradient(90deg,#749eaf23 1px,transparent 1px);
+  background-size:35px 35px}
+.chart-pending {
+  position:absolute;
+  top:15px;
+  left:12px;
+  font:10px ui-monospace,monospace;
+  color:#adc5d0;
+  z-index:2}
+.card-art img {
+  position:absolute;
+  inset:40px 0 0;
+  width:100%;
+  height:calc(100% - 40px);
+  object-fit:cover;
+  object-position:center top;
+  mix-blend-mode:luminosity}
+.portrait-fallback {
+  display:grid;
+  place-items:center;
+  height:100%;
+  font-size:100px;
+  color:#647e98}
+.card-position {
+  position:absolute;
+  bottom:15px;
+  left:14px;
+  font:900 30px ui-monospace,monospace;
+  z-index:2;
+  text-shadow:2px 2px #000}
+.card-position small {
+  display:block;
+  font-size:12px;
+  color:#e4ce96}
+.card-ribbon {
+  position:absolute;
+  bottom:0;
+  right:0;
+  padding:55px 12px 14px 60px;
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  background:#245980;
+  color:#f1e0aa;
+  font:800 15px/1.4 ui-monospace,monospace;
+  text-align:right}
+.card-brand {
+  background:#204568;
+  border-top:5px solid #d1b97e;
+  padding:9px 2px;
+  text-align:center;
+  font:italic 900 16px Arial;
+  color:#f3df9f}
+.news {
+  margin-top:16px}
+.news p,.news small,.news a {
+  display:block;
+  padding:10px 14px;
+  font-size:13px;
+  line-height:1.6}
+.news a {
+  color:#82bdda}
+.muted {
+  color:#859ca5}
+.intelligence h3 {
+  font-size:23px;
+  font-weight:700;
+  padding:14px 14px 0}
+.intelligence>p.muted {
+  padding:3px 14px 14px;
+  font-size:13px}
+.score-box {
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  margin:0 14px;
+  border:1px solid #30424d}
+.score-box>div {
+  padding:12px}
+.score-box>div+div {
+  border-left:1px solid #30424d}
+.score-box small {
+  display:block;
+  font:10px ui-monospace,monospace;
+  color:#a9b7bd}
+.score-box strong {
+  display:block;
+  font:700 20px ui-monospace,monospace;
+  color:#88bee5;
+  margin-top:8px}
+.score-box b {
+  display:block;
+  font:700 15px ui-monospace,monospace;
+  color:#88bee5;
+  margin-top:10px}
+.intelligence-tabs {
+  margin:16px 14px 4px;
+  padding:8px 0;
+  border-bottom:1px solid #35434b;
+  font:12px ui-monospace,monospace;
+  color:#ead19a}
+.intelligence-tabs span {
+  float:right;
+  color:#81969e}
+.intelligence dl {
+  padding:0 14px}
+.intelligence dl>div {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid #ffffff08;
+  padding:9px 0;
+  font-size:13px}
+.intelligence dd {
+  font:11px ui-monospace,monospace;
+  color:#90a5ae;
+  text-align:right}
+.value-empty {
+  margin:16px 14px 0;
+  padding:14px;
+  border:1px solid #293d48;
+  background:repeating-linear-gradient(0deg,transparent 0 24px,#ffffff04 25px 26px);
+  height:105px;
+  font:11px ui-monospace,monospace;
+  color:#8fabb9}
+.value-empty p {
+  margin-top:30px;
+  text-align:center;
+  font-size:12px}
+button {
+  cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible {
+  outline:2px solid #a1d5f5;
+  outline-offset:3px}
+@media(max-width:1050px) {
+  .terminal-grid {
+  grid-template-columns:minmax(200px,.8fr) minmax(280px,1fr)}
+.intelligence-column {
+  grid-column:1/-1}
+.intelligence dl {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 24px}
+}
+@media(max-width:640px) {
+  .terminal-grid {
+  display:flex;
+  flex-direction:column}
+.feature-column {
+  order:0;
+  width:100%}
+.market-list {
+  order:1;
+  width:100%}
+.intelligence-column {
+  order:2;
+  width:100%}
+.terminal-status {
+  display:block}
+.terminal-status span {
+  display:block}
+.card-art {
+  height:370px}
+.card-name h2 {
+  font-size:23px}
+.intelligence dl {
+  display:block}
+
+}
+
