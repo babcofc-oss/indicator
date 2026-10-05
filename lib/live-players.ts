@@ -3,6 +3,9 @@ import { sleeperPlayerId } from '@/lib/player-images'
 import { unstable_cache } from 'next/cache'
 
 type SleeperPlayer = {
+  full_name?: string
+  team?: string | null
+  position?: string
   status?: string | null
   injury_status?: string | null
   injury_body_part?: string | null
@@ -23,7 +26,7 @@ const getStatusSnapshot = unstable_cache(async () => {
     records: Object.fromEntries(players.map((player) => [player.id, directory[sleeperPlayerId(player.id) ?? ''] ?? null])) as Record<string, SleeperPlayer | null>,
     checkedAt: response.headers.get('date') ?? new Date().toUTCString(),
   }
-}, ['sleeper-tracked-player-availability-v1'], { revalidate: 86400 })
+}, ['sleeper-tracked-player-availability-v2'], { revalidate: 3600 })
 
 export async function getLivePlayers(): Promise<Player[]> {
   let snapshot: { records: Record<string, SleeperPlayer | null>; checkedAt: string } = { records: {}, checkedAt: '' }
@@ -33,8 +36,10 @@ export async function getLivePlayers(): Promise<Player[]> {
     // Do not publish a positive recommendation when availability cannot be checked.
   }
 
-  return players.map((sample) => {
-    const record = snapshot.records[sample.id]
+  return players.flatMap((original) => {
+    const record = snapshot.records[original.id]
+    if (!record?.full_name || !record.team || record.position !== original.position) return []
+    const sample = { ...original, name: record.full_name, team: record.team }
     const availability = record
       ? (record.injury_status || record.status || 'Unverified')
       : 'Unverified'
