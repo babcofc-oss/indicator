@@ -14,6 +14,8 @@ export function MarketTerminal({ players }: { players: Player[] }) {
   useEffect(() => { setSearchHost(document.getElementById('terminal-search')) }, [])
   const searchField = <input aria-label="Search players" placeholder="Search players, teams…" value={search} onChange={e => setSearch(e.target.value)} />
   const player = players[index]
+  const actionPhoto = player?.id === 'justin-herbert'
+  const photo = actionPhoto ? '/justin-herbert-2021.jpg' : player && playerPortrait(player.id)
   const filtered = players.filter(p => (position === 'ALL' || p.position === position) && `${p.name} ${p.team}`.toLowerCase().includes(search.toLowerCase()))
   const cycle = (step: number) => setIndex(current => players.length ? (current + step + players.length) % players.length : 0)
   return <div className="terminal">
@@ -33,10 +35,11 @@ export function MarketTerminal({ players }: { players: Player[] }) {
         {player ? <Link className="terminal-card" href={`/players/${player.id}`} aria-label={`Open ${player.name} profile`}>
           <div className="card-name"><span className="card-crest">{player.team}</span><div><h2>{player.name}</h2><p>{player.position} · {player.team}</p></div><span className="card-edition">NFL<br/>PLAYER</span></div>
           <div className="card-art"><div className="card-chart-grid" /><span className="chart-pending">UNDERLYING VALUE · UNKNOWN</span>
-            {playerPortrait(player.id) && !failedPhotos.includes(player.id) ? <img src={playerPortrait(player.id)} alt={`${player.name} portrait`} onError={() => setFailedPhotos(previous => [...previous,player.id])} /> : <div className="portrait-fallback">{player.name.split(' ').map(n=>n[0]).join('')}</div>}
+            {photo && !failedPhotos.includes(player.id) ? <img className={actionPhoto ? "game-photo" : undefined} src={photo} alt={`${player.name}${actionPhoto ? " in uniform, September 2021" : " portrait"}`} onError={() => setFailedPhotos(previous => [...previous,player.id])} /> : <div className="portrait-fallback">{player.name.split(' ').map(n=>n[0]).join('')}</div>}
             <span className="card-position">{player.position}<small>{player.team}</small></span><div className="card-ribbon"><span>UNDERLYING VALUE</span><span>OPPORTUNITY</span><span>UNRATED</span></div>
           </div><div className="card-brand">★ ★ ★ &nbsp; THE INDICATOR &nbsp; ★ ★ ★</div>
         </Link> : <div className="terminal-panel empty-note">Player directory unavailable. No roster claims published.</div>}
+        {actionPhoto && <p className="photo-credit">2021 photo: <a href="https://commons.wikimedia.org/wiki/File:Justin_Herbert_2021.jpg">All-Pro Reels</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · display crop</p>}
         <section className="terminal-panel news"><h2>RECENT NEWS & NOTES</h2><p>No sourced news available yet.</p><p className="muted">Roster identity and availability are observed data. Projections and Indicator analysis remain unpublished.</p>{player?.availabilityCheckedAt && <small>Sleeper roster checked: {player.availabilityCheckedAt}</small>}</section>
       </div>
       <div className="intelligence-column"><section className="terminal-panel intelligence"><h2>PLAYER INTELLIGENCE</h2><h3>{player?.name || 'UNKNOWN'}</h3><p className="muted">{player?.position} · {player?.team}</p>

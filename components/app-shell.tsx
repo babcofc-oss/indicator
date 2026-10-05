@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Activity, GitCompare, LineChart, Radio, Shield, Bookmark } from 'lucide-react'
@@ -21,9 +22,27 @@ function isActive(pathname: string, href: string) {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const home = pathname === '/'
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const [frame, setFrame] = useState({ scale: 1, height: 760 })
+  useEffect(() => {
+    if (!home || !viewportRef.current || !stageRef.current) return
+    const measure = () => {
+      const style = getComputedStyle(viewportRef.current!)
+      const width = viewportRef.current!.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
+      const scale = Math.min(1, width / 1120)
+      setFrame({ scale, height: stageRef.current!.scrollHeight * scale })
+    }
+    const observer = new ResizeObserver(measure)
+    observer.observe(viewportRef.current)
+    observer.observe(stageRef.current)
+    measure()
+    return () => observer.disconnect()
+  }, [home])
 
   return (
-    <div className="min-h-dvh indicator-shell">
+    <div ref={viewportRef} className={cn("min-h-dvh indicator-shell", home && "reference-home")}><div className="reference-frame" style={home ? { height: frame.height } : undefined}><div ref={stageRef} className="reference-stage" style={home ? { transform: `scale(${frame.scale})` } : undefined}>
       {/* Header */}
       <header className="shell-header sticky top-0 z-40 border-b border-border/80 bg-background/85 backdrop-blur-md">
         <div className="shell-header-inner mx-auto flex max-w-[1440px] items-center justify-between px-4 py-3">
@@ -73,8 +92,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Main */}
       <main className="shell-main mx-auto max-w-[1440px] px-4 pb-28 pt-4 md:pb-12">{pathname !== '/' && <div role="note" className="mb-4 border border-amber-400/50 bg-amber-400/10 p-4 text-sm text-amber-200"><strong>DEMO ANALYTICS —</strong> Scores, rankings, projections, charts, depth charts and signals on this screen are illustrative. They are not verified and must not be used for roster decisions.</div>}{children}</main>
 
+      </div></div>
       {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/90 backdrop-blur-md md:hidden">
+      <nav className={cn(home && "home-bottom-nav", "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/90 backdrop-blur-md md:hidden")}>
         <div className="mx-auto grid max-w-[1440px] grid-cols-6">
           {NAV.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href)
