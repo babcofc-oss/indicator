@@ -644,3 +644,38 @@ button:focus-visible,a:focus-visible,input:focus-visible {
 .reference-home .intelligence .intelligence-detail-grid dl > div { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 4px; padding: 5px 0; }
 .reference-home .intelligence-detail-grid dd { margin: 0; font-size: 9px; }
 .reference-home .intelligence-detail-grid dt { font-size: 9px; }
+/* Reference card finishing: photographic cutout, team crests and engraved trim. */
+.reference-home .terminal-card { border-color: #edd9a6; box-shadow: 0 0 0 1px #855742,inset 0 0 0 2px #f5bb69,0 7px 25px #0009; }
+.reference-home .card-name { background: linear-gradient(90deg,#183c47,#165969 50%,#173a46); border-color: #f1dfb4; }
+.reference-home .card-crest { flex: 0 0 56px; width: 56px; height: 56px; background: radial-gradient(circle,#d54330,#a41e19); border: 2px solid #f6e3b4; box-shadow: 0 0 0 2px #e5814b; }
+.reference-home .card-crest img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 1px 1px #0008); }
+.reference-home .card-edition { font-family: 'Indicator Card',sans-serif; font-size: 10px; padding: 4px; border: 1px solid #ebd49b; border-radius: 3px 3px 8px 8px; color: #ffe6b4; background: #962b25; }
+.reference-home .card-name h2 { text-shadow: 0 2px #0c242b,1px 0 #d9f4ec88; }
+.reference-home .card-name p { font-family: 'Indicator Card',sans-serif; letter-spacing: .06em; font-size: 14px; margin-top: 2px; }
+.reference-home .card-art { background: radial-gradient(ellipse at 65% 35%,#16444d,#06191e 65%,#02080b); }
+.reference-home .card-chart-grid { z-index: 0; background-image: linear-gradient(#63bac624 1px,transparent 1px),linear-gradient(90deg,#63bac624 1px,transparent 1px); background-size: 25px 25px; box-shadow: inset 0 0 55px #000b; }
+.reference-home .card-art .game-photo { z-index: 1; object-fit: cover; object-position: center top; filter: drop-shadow(0 0 12px #2d9ab333); }
+.reference-home .card-art::after { z-index: 1; box-shadow: inset 0 0 25px #030d0f44; }
+.reference-home .card-position { z-index: 3; clip-path: polygon(0 0,100% 0,100% 83%,50% 100%,0 83%); border: 2px solid #eddbae; padding: 7px 7px 12px; font-family: 'Indicator Card',sans-serif; background: #14374ae8; }
+.reference-home .card-ribbon { width: 58%; right: -20px; bottom: 85px; transform: rotate(-34deg); border-width: 2px; }
+.reference-home .card-ribbon span { font: italic 400 20px/1.15 'Indicator Card',sans-serif; padding: 5px 9px; text-shadow: 0 1px #162b3c; }
+.reference-home .card-brand { font-family: 'Indicator Card',sans-serif; font-size: 20px; font-weight: 400; letter-spacing: .03em; line-height: 1.25; }
+.reference-home .intelligence-identity { display: flex; align-items: center; justify-content: space-between; padding-right: 12px; }
+.reference-home .intelligence-identity h3 { font-family: 'Indicator Card',sans-serif; font-weight: 400; font-size: 24px; }
+.reference-home .intelligence-team img { width: 47px; height: 40px; object-fit: contain; }
+.reference-home .market-list { max-height: none; height: 100%; }
+.reference-home .market-player { min-height: 28px; }
+.reference-home .market-player strong { font-size: 11px; }
+.reference-home .market-player small { display: inline; font-size: 9px; margin-left: 6px; }
+.reference-home .terminal-panel h1,.reference-home .terminal-panel h2 { font-family: 'Indicator Card',sans-serif; font-weight: 400; font-size: 15px; letter-spacing: .025em; }
+.reference-home .intelligence h2 { font-size: 11px; }
+.reference-home .market-list { contain: size; height: auto; overflow-y: auto; }
+.reference-home .intelligence-column { display: flex; flex-direction: column; }
+.reference-home .intelligence { flex: 1; }
+.reference-home .feature-controls { top: 48%; }
+.reference-home .schedule-table { width: 100%; font: 10px/1.8 ui-monospace,monospace; text-align: left; }
+.reference-home .schedule-table th { font-size: 8px; color: #869da5; font-weight: 400; }
+.reference-home .schedule-table td { border-top: 1px solid #ffffff08; padding: 3px 0; }
+.reference-home .schedule-table a { color: #a9d1e0; }
+.reference-home .schedule-source { display: block; font: 8px/1.5 ui-monospace,monospace; color: #81969e; padding-top: 5px; }
+.reference-home .terminal-grid { align-items: stretch; }
